@@ -15,8 +15,8 @@ from labtool.encoders import encoders_available, make_encoder
 def make_argument_parser():
 	parser = ArgumentParser(prog='labtool', description='A tool to analyze compatible lab report files.')
 	parser.add_argument('files', nargs='*', help='report files to analyze (PDF)')
-	parser.add_argument('-o', '--output', help='output to file instead of console')
 	parser.add_argument('-f', '--format', choices=encoders_available(), default='tab', help='output format')
+	parser.add_argument('-o', '--output', help='output to file instead of console')
 	parser.add_argument('-v', '--verbose', action='store_true', help='show additional info')
 	return parser
 
