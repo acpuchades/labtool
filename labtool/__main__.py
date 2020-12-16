@@ -13,7 +13,7 @@ from labtool.encoders import encoders_available, make_encoder
 
 
 def make_argument_parser():
-	parser = ArgumentParser()
+	parser = ArgumentParser(prog='labtool', description='A tool to analyze compatible lab report files.')
 	parser.add_argument('files', nargs='*', help='report files to analyze (PDF)')
 	parser.add_argument('-o', '--output', help='output to file instead of console')
 	parser.add_argument('-f', '--format', choices=encoders_available(), default='tab', help='output format')
@@ -32,6 +32,10 @@ def main():
 	parser = make_argument_parser()
 	args = parser.parse_args()
 	out = sys.stdout
+
+	if len(sys.argv) == 1:
+		parser.print_help(file=sys.stderr)
+		sys.exit()
 
 	rows = []
 	for pattern in args.files:
