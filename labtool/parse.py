@@ -130,15 +130,12 @@ class Field:
 	def add_data(self, data):
 		self._data.append(data)
 
-	def related_items(self):
-		yield from set(map(attrgetter('item'), self._data))
-
 	def encode(self, encode):
 		for fdata in self._data:
 			fdata.encode(encode)
 
 
-@dataclass
+@dataclass(frozen=True)
 class FieldValue:
 
 	item: LTItem
@@ -148,7 +145,7 @@ class FieldValue:
 		encode('value', self.value)
 
 
-@dataclass
+@dataclass(frozen=True)
 class FieldUnit:
 
 	item: LTItem
@@ -162,7 +159,7 @@ class FieldRefValues:
 	pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class TwoSidedRefValueInterval(FieldRefValues):
 
 	item: LTItem
@@ -174,7 +171,7 @@ class TwoSidedRefValueInterval(FieldRefValues):
 		encode('refvalue.lt', self.max)
 
 
-@dataclass
+@dataclass(frozen=True)
 class OneSidedRefValueInterval(FieldRefValues):
 
 	GE = '≥'
@@ -199,7 +196,7 @@ class OneSidedRefValueInterval(FieldRefValues):
 			raise NotImplementedError(f'unknown operation {self.sign}')
 
 
-@dataclass
+@dataclass(frozen=True)
 class FieldText:
 	item: LTItem
 	text: str
@@ -330,17 +327,19 @@ def parse_field_related_item(content, item):
 	return FieldText(item=item, text=content)
 
 
-def parse_field_children_item_set(associated):
+def parse_field_children_item_set(available):
+	assert(available == sorted(available, key=lambda c_i: item_ordering(c_i[1])))
+
 	related = []
 
 	i = 0
-	for i, (content, item) in enumerate(associated):
+	for i, (content, item) in enumerate(available):
 		result = parse_field_related_item(content, item)
 		related.append(result)
 		if isinstance(result, FieldValue):
 			break
 
-	for (content, item) in associated[i+1:]:
+	for (content, item) in available[i+1:]:
 		result = parse_field_related_item(content, item)
 		if isinstance(result, FieldValue):
 			break
@@ -350,16 +349,15 @@ def parse_field_children_item_set(associated):
 
 
 def parse_regular_field(name, item, limits, available):
+	assert(available == sorted(available, key=lambda c_i: item_ordering(c_i[1])))
+
 	field = Field(apply_field_mapping(name))
-
 	associated = find_field_associated_items(item, limits, available)
-	def ordering(c_i): return item_ordering(c_i[1])
-	associated = sorted(associated, key=ordering)
-
-	for fdata in parse_field_children_item_set(associated):
+	field_items = parse_field_children_item_set(associated)
+	for fdata in field_items:
 		field.add_data(fdata)
 
-	return field
+	return field, available[len(field_items):]
 
 
 def parse_lab(f):
@@ -390,17 +388,17 @@ def parse_lab(f):
 		def field_ordering(n_i): return item_ordering(n_i[1])
 		field_items = sorted(field_items, key=field_ordering)
 		value_items = sorted(value_items, key=field_ordering)
+
 		for i, (name, item) in enumerate(field_items):
 			limits = list(item.bbox)
 			if i < len(field_items) - 2:
 				_, next_item = field_items[i+1]
 				limits[1] = next_item.bbox[3]
 
-			field = parse_regular_field(name, item, limits, value_items)
-			for item in field.related_items():
-				if item in value_items:
-					value_items.remove(item)
-			if field.name not in data:
-				data[field.name] = field
+			field, value_items = parse_regular_field(name, item, limits, value_items)
+			if field.name in data:
+				continue
+
+			data[field.name] = field
 
 	return data.values()
