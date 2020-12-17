@@ -380,6 +380,7 @@ def parse_regular_field(name, limits, available):
 
 def parse_lab(f):
 	data = {}
+
 	for page in extract_pages(f):
 		field_items = []
 		value_items = []
@@ -411,7 +412,7 @@ def parse_lab(f):
 		value_items = sorted(value_items, key=field_ordering)
 
 		for i, (name, pos) in enumerate(field_items):
-			if i < len(field_items) - 2:
+			if i < len(field_items) - 1:
 				_, next_pos = field_items[i+1]
 				pos[POSITION_BOTTOM] = next_pos[POSITION_TOP]
 
