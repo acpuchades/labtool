@@ -321,6 +321,11 @@ def try_parse_field_ref_values(content):
 		return OneSidedRefValueInterval(sign=result[1],
 		                                limit=float(result[2]))
 
+	result = re.match(r'(?:Valor|Concentració) desitjable ([<>≤≥]) (\d+(?:\.\d+)?)', content)
+	if result is not None:
+		return OneSidedRefValueInterval(sign=result[1],
+		                                limit=float(result[2]))
+
 	return None
 
 
