@@ -4,9 +4,9 @@ from .tab  import TabEncoder
 
 
 ENCODERS_AVAILABLE = {
+	'tab' : TabEncoder,
 	'csv' : CSVEncoder,
 	'json': JSONEncoder,
-	'tab' : TabEncoder,
 }
 
 
