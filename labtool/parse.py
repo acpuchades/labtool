@@ -12,6 +12,8 @@ POSITION_RIGHT  = 2
 POSITION_TOP    = 3
 
 LINE_HEIGHT     = 10
+ITEM_VPADDING   = 10
+ITEM_VTOLERANCY = 5
 
 STANDALONE_FIELDS = [
 	'CIP',
@@ -271,7 +273,9 @@ def find_field_related_items(limits, available):
 		ileft, _, _, itop = pos
 		if ileft < left:
 			continue
-		if itop <= bottom or itop > top:
+		if bottom - itop > ITEM_VTOLERANCY:
+			continue
+		if itop - top > ITEM_VTOLERANCY:
 			continue
 
 		related.append((content, pos))
@@ -307,12 +311,12 @@ def try_parse_field_unit(content):
 
 
 def try_parse_field_ref_values(content):
-	result = re.match(r'\[ (\d+(?:\.\d+)) - (\d+(?:\.\d+)) \]', content)
+	result = re.match(r'\[ (\d+(?:\.\d+)?) - (\d+(?:\.\d+)?) \]', content)
 	if result is not None:
 		return TwoSidedRefValueInterval(min=float(result[1]),
 		                                max=float(result[2]))
 
-	result = re.match(r'\[ ([<>≤≥]) (\d+(?:\.\d+)) \]', content)
+	result = re.match(r'\[ ([<>≤≥]) (\d+(?:\.\d+)?) \]', content)
 	if result is not None:
 		return OneSidedRefValueInterval(sign=result[1],
 		                                limit=float(result[2]))
@@ -339,7 +343,7 @@ def parse_field_related_item(content):
 def parse_fields_while(condition, available):
 	fields = []
 
-	for content, pos in available:
+	for content, _ in available:
 		result = parse_field_related_item(content)
 		fields.append(result)
 
@@ -349,34 +353,34 @@ def parse_fields_while(condition, available):
 	return fields
 
 
-def parse_field_related_item_set(available, is_dual_field=False):
+def parse_field_related_item_set(available):
 	assert(available == sorted(available, key=lambda c_p: item_ordering(c_p[1])))
 
 	not_field_value = lambda x: not isinstance(x, FieldValue)
-	related = parse_fields_while(not_field_value, available)
+	related  = parse_fields_while(not_field_value, available)
+	related += parse_fields_while(not_field_value, available[len(related):])
 
-	skipped = []
-	if is_dual_field:
-		skipped += parse_fields_while(not_field_value, available[len(related):])
+	if len(related) < len(available):
+		related.pop()
 
-	related += parse_fields_while(not_field_value, available[len(related) + len(skipped):])[:-1]
-	if is_dual_field:
-		skipped += parse_fields_while(not_field_value, available[len(related) + len(skipped):])
-
-	return related, skipped
+	return related
 
 
 def parse_regular_field(name, limits, available):
 	assert(available == sorted(available, key=lambda c_i: item_ordering(c_i[1])))
 
 	field = Field(apply_field_mapping(name))
-	related = find_field_related_items(limits, available)
-	related, skipped = parse_field_related_item_set(related, is_dual_field=field.name in DUAL_FIELDS)
 
-	for fdata in related:
+	related = find_field_related_items(limits, available)
+	included = parse_field_related_item_set(related)
+	for fdata in included:
 		field.add_data(fdata)
 
-	return field, available[len(related) + len(skipped):]
+	skipped = []
+	if field.name in DUAL_FIELDS:
+		skipped = parse_field_related_item_set(related[len(included):])
+
+	return field, available[len(included) + len(skipped):]
 
 def parse_lab(f):
 	data = {}
@@ -414,9 +418,10 @@ def parse_lab(f):
 		for i, (name, pos) in enumerate(field_items):
 			if i < len(field_items) - 1:
 				_, next_pos = field_items[i+1]
-				pos[POSITION_BOTTOM] = next_pos[POSITION_TOP]
+				pos[POSITION_BOTTOM] = next_pos[POSITION_TOP] + ITEM_VPADDING
 
 			field, value_items = parse_regular_field(name, pos, value_items)
+
 			if field.name in data:
 				continue
 
