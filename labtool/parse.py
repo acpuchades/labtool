@@ -103,6 +103,15 @@ FIELD_MAPPING = {
 	'Pla-Anticoagulant lúpic; c.arb.(negatiu; dubtós; positiu)': 'Plasma/Anticoagulant-Lupic',
 }
 
+DUAL_FIELDS = [
+	'Serum/Colesterol',
+	'Serum/Glucosa',
+	'Serum/HDL',
+	'Serum/LDL',
+	'Serum/No-HDL',
+	'Serum/Triglicerid',
+]
+
 KNOWN_UNITS = [
 	'1',
 	'%',
@@ -248,8 +257,8 @@ def apply_field_mapping(key):
 	return FIELD_MAPPING.get(key, key)
 
 
-def find_field_associated_items(parent, limits, available):
-	associated = []
+def find_field_related_items(parent, limits, available):
+	related = []
 
 	left, bottom, _, top = limits
 	for (content, item) in available:
@@ -263,9 +272,10 @@ def find_field_associated_items(parent, limits, available):
 			continue
 		if itop <= bottom or itop > top:
 			continue
-		associated.append((content, item))
 
-	return associated
+		related.append((content, item))
+
+	return related
 
 
 def item_ordering(item):
@@ -327,37 +337,47 @@ def parse_field_related_item(content, item):
 	return FieldText(item=item, text=content)
 
 
-def parse_field_children_item_set(available):
+def parse_fields_while(condition, available):
+	fields = []
+
+	for content, item in available:
+		result = parse_field_related_item(content, item)
+		fields.append(result)
+
+		if not condition(result):
+			break
+
+	return fields
+
+
+def parse_field_related_item_set(available, is_dual_field=False):
 	assert(available == sorted(available, key=lambda c_i: item_ordering(c_i[1])))
 
-	related = []
+	not_field_value = lambda x: not isinstance(x, FieldValue)
 
-	i = 0
-	for i, (content, item) in enumerate(available):
-		result = parse_field_related_item(content, item)
-		related.append(result)
-		if isinstance(result, FieldValue):
-			break
+	skipped = []
+	related = parse_fields_while(not_field_value, available)
+	if is_dual_field:
+		skipped += parse_fields_while(not_field_value, available[len(related):])
 
-	for (content, item) in available[i+1:]:
-		result = parse_field_related_item(content, item)
-		if isinstance(result, FieldValue):
-			break
-		related.append(result)
+	related += parse_fields_while(not_field_value, available[len(related) + len(skipped):])[:-1]
+	if is_dual_field:
+		skipped += parse_fields_while(not_field_value, available[len(related) + len(skipped):])
 
-	return related
+	return related, skipped
 
 
 def parse_regular_field(name, item, limits, available):
 	assert(available == sorted(available, key=lambda c_i: item_ordering(c_i[1])))
 
 	field = Field(apply_field_mapping(name))
-	associated = find_field_associated_items(item, limits, available)
-	field_items = parse_field_children_item_set(associated)
-	for fdata in field_items:
+	related = find_field_related_items(item, limits, available)
+	related, skipped = parse_field_related_item_set(related, is_dual_field=field.name in DUAL_FIELDS)
+
+	for fdata in related:
 		field.add_data(fdata)
 
-	return field, available[len(field_items):]
+	return field, available[len(related) + len(skipped):]
 
 
 def parse_lab(f):
