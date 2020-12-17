@@ -6,6 +6,13 @@ from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTItem, LTTextBoxHorizontal
 
 
+POSITION_LEFT   = 0
+POSITION_BOTTOM = 1
+POSITION_RIGHT  = 2
+POSITION_TOP    = 3
+
+LINE_HEIGHT     = 10
+
 STANDALONE_FIELDS = [
 	'CIP',
 	'Data obtenció mostra',
@@ -117,10 +124,10 @@ KNOWN_UNITS = [
 	'%',
 	'mm',
 	'pg',
-	'U/L', 'mu.int./L', 'ku.i./L',
+	'U/L', 'ku.i./L', 'mu.int./L',
 	'g/L', 'mg/L', 'mg/dL',
 	'mmol/L', 'µmol/L', 'pmol/L', 'nmol/L',
-	'x10E9/L', 'x10E12/L'
+	'x10E9/L', 'x10E12/L',
 	'mmol/mol',
 	'fL',
 	'mL/min',
@@ -147,7 +154,6 @@ class Field:
 @dataclass(frozen=True)
 class FieldValue:
 
-	item: LTItem
 	value: str
 
 	def encode(self, encode):
@@ -157,7 +163,6 @@ class FieldValue:
 @dataclass(frozen=True)
 class FieldUnit:
 
-	item: LTItem
 	unit: str
 
 	def encode(self, encode):
@@ -171,7 +176,6 @@ class FieldRefValues:
 @dataclass(frozen=True)
 class TwoSidedRefValueInterval(FieldRefValues):
 
-	item: LTItem
 	min: float
 	max: float
 
@@ -188,7 +192,6 @@ class OneSidedRefValueInterval(FieldRefValues):
 	LE = '≤'
 	LT = '<'
 
-	item: LTItem
 	sign: str
 	limit: float
 
@@ -207,7 +210,7 @@ class OneSidedRefValueInterval(FieldRefValues):
 
 @dataclass(frozen=True)
 class FieldText:
-	item: LTItem
+
 	text: str
 
 	def encode(self, format):
@@ -236,7 +239,7 @@ def parse_standalone_field(content, item):
 	value = normalize_string(key_value[1])
 
 	field = Field(name)
-	field.add_data(FieldValue(item=item, value=value))
+	field.add_data(FieldValue(value=value))
 	return field
 
 
@@ -257,29 +260,27 @@ def apply_field_mapping(key):
 	return FIELD_MAPPING.get(key, key)
 
 
-def find_field_related_items(parent, limits, available):
+def find_field_related_items(limits, available):
 	related = []
 
 	left, bottom, _, top = limits
-	for (content, item) in available:
-		if not isinstance(item, LTTextBoxHorizontal):
-			continue
-		if item == parent:
+	for (content, pos) in available:
+		if pos == limits:
 			continue
 
-		ileft, _, _, itop = item.bbox
+		ileft, _, _, itop = pos
 		if ileft < left:
 			continue
 		if itop <= bottom or itop > top:
 			continue
 
-		related.append((content, item))
+		related.append((content, pos))
 
 	return related
 
 
-def item_ordering(item):
-	fleft, _, _, ftop = item.bbox
+def item_ordering(pos):
+	fleft, _, _, ftop = pos
 	return (-ftop, fleft)
 
 
@@ -287,61 +288,59 @@ def get_item_content(item):
 	return normalize_string(item.get_text())
 
 
-def try_parse_field_value(content, item):
+def try_parse_field_value(content):
 	result = re.match(r'(?:\*\s+)?([<>]?\d+(?:\.\d+)?)', content)
 	if result is not None:
-		return FieldValue(item=item, value=result[1])
+		return FieldValue(value=result[1])
 
 	if content in ['Pendent', '----']:
-		return FieldValue(item=item, value=None)
+		return FieldValue(value=None)
 
 	return None
 
 
-def try_parse_field_unit(content, item):
+def try_parse_field_unit(content):
 	if content in KNOWN_UNITS:
-		return FieldUnit(item=item, unit=content)
+		return FieldUnit(unit=content)
 
 	return None
 
 
-def try_parse_field_ref_values(content, item):
+def try_parse_field_ref_values(content):
 	result = re.match(r'\[ (\d+(?:\.\d+)) - (\d+(?:\.\d+)) \]', content)
 	if result is not None:
-		return TwoSidedRefValueInterval(item=item,
-		                                min=float(result[1]),
+		return TwoSidedRefValueInterval(min=float(result[1]),
 		                                max=float(result[2]))
 
 	result = re.match(r'\[ ([<>≤≥]) (\d+(?:\.\d+)) \]', content)
 	if result is not None:
-		return OneSidedRefValueInterval(item=item,
-		                                sign=result[1],
+		return OneSidedRefValueInterval(sign=result[1],
 		                                limit=float(result[2]))
 
 	return None
 
 
-def parse_field_related_item(content, item):
-	result = try_parse_field_unit(content, item)
+def parse_field_related_item(content):
+	result = try_parse_field_unit(content)
 	if result is not None:
 		return result
 
-	result = try_parse_field_value(content, item)
+	result = try_parse_field_value(content)
 	if result is not None:
 		return result
 
-	result = try_parse_field_ref_values(content, item)
+	result = try_parse_field_ref_values(content)
 	if result is not None:
 		return result
 
-	return FieldText(item=item, text=content)
+	return FieldText(text=content)
 
 
 def parse_fields_while(condition, available):
 	fields = []
 
-	for content, item in available:
-		result = parse_field_related_item(content, item)
+	for content, pos in available:
+		result = parse_field_related_item(content)
 		fields.append(result)
 
 		if not condition(result):
@@ -351,12 +350,12 @@ def parse_fields_while(condition, available):
 
 
 def parse_field_related_item_set(available, is_dual_field=False):
-	assert(available == sorted(available, key=lambda c_i: item_ordering(c_i[1])))
+	assert(available == sorted(available, key=lambda c_p: item_ordering(c_p[1])))
 
 	not_field_value = lambda x: not isinstance(x, FieldValue)
+	related = parse_fields_while(not_field_value, available)
 
 	skipped = []
-	related = parse_fields_while(not_field_value, available)
 	if is_dual_field:
 		skipped += parse_fields_while(not_field_value, available[len(related):])
 
@@ -367,18 +366,17 @@ def parse_field_related_item_set(available, is_dual_field=False):
 	return related, skipped
 
 
-def parse_regular_field(name, item, limits, available):
+def parse_regular_field(name, limits, available):
 	assert(available == sorted(available, key=lambda c_i: item_ordering(c_i[1])))
 
 	field = Field(apply_field_mapping(name))
-	related = find_field_related_items(item, limits, available)
+	related = find_field_related_items(limits, available)
 	related, skipped = parse_field_related_item_set(related, is_dual_field=field.name in DUAL_FIELDS)
 
 	for fdata in related:
 		field.add_data(fdata)
 
 	return field, available[len(related) + len(skipped):]
-
 
 def parse_lab(f):
 	data = {}
@@ -391,31 +389,33 @@ def parse_lab(f):
 				continue
 
 			text = item.get_text()
-			for content in text.split('\n'):
+			for nline, content in enumerate(text.split('\n')):
 				content = normalize_string(content)
 				if content == '':
 					continue
+
+				position = list(item.bbox)
+				position[POSITION_TOP] -= nline * LINE_HEIGHT
 
 				if is_standalone_field(content):
 					field = parse_standalone_field(content, item)
 					if field is not None and field.name not in data:
 						data[field.name] = field
 				elif is_regular_field(content):
-					field_items.append((content, item))
+					field_items.append((content, position))
 				else:
-					value_items.append((content, item))
+					value_items.append((content, position))
 
-		def field_ordering(n_i): return item_ordering(n_i[1])
+		def field_ordering(n_p): return item_ordering(n_p[1])
 		field_items = sorted(field_items, key=field_ordering)
 		value_items = sorted(value_items, key=field_ordering)
 
-		for i, (name, item) in enumerate(field_items):
-			limits = list(item.bbox)
+		for i, (name, pos) in enumerate(field_items):
 			if i < len(field_items) - 2:
-				_, next_item = field_items[i+1]
-				limits[1] = next_item.bbox[3]
+				_, next_pos = field_items[i+1]
+				pos[POSITION_BOTTOM] = next_pos[POSITION_TOP]
 
-			field, value_items = parse_regular_field(name, item, limits, value_items)
+			field, value_items = parse_regular_field(name, pos, value_items)
 			if field.name in data:
 				continue
 
