@@ -4,16 +4,15 @@ A tool to analyze lab report files
 
 # Installing
 
-```console
+```shell
 $ pip install labtool
 ```
 
 # Usage
 
-```console
+```shell
 $ labtool --help
-
-usage: labtool [-h] [-f {csv,json,tab}] [-o OUTPUT] [-v] [files ...]
+usage: labtool [-h] [-f {tab,csv,json}] [-o OUTPUT] [-v] [files ...]
 
 A tool to analyze compatible lab report files.
 
