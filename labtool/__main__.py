@@ -21,11 +21,11 @@ def make_argument_parser():
 	return parser
 
 
-def wrap_field_encoder(encoder, field):
-	def encode_wrapper(prop, value):
+def make_field_encoder(encoder, field):
+	def encode_helper(prop, value):
 		return encoder.write_property(field.name, prop, value)
 
-	return encode_wrapper
+	return encode_helper
 
 
 def main():
@@ -33,54 +33,61 @@ def main():
 	args = parser.parse_args()
 	out = sys.stdout
 
+	def vprint(message):
+		if args.verbose:
+			print(message, file=sys.stderr)
+
 	if len(sys.argv) == 1:
 		parser.print_help(file=sys.stderr)
 		sys.exit()
 
-	rows = []
-	for pattern in args.files:
-		path = None
-		for path in glob(pattern):
-			try:
-				if args.verbose:
-					print(f'Parsing file "{path}"', file=sys.stderr)
-				with open(path, 'rb') as f:
-					data = parse_lab(f)
-					if data is not None:
-						rows.append(data)
-
-			except RuntimeError:
-				print(f'There was an error trying to open "{path}", skipping...', file=sys.stderr)
-
-		if not path:
-			print(f'No files found matching "{pattern}"', file=sys.stderr)
-
 	if args.output is not None:
-		if len(rows) == 0:
-			print(f'No output files were generated', file=sys.stderr)
-			sys.exit(-1)
-
 		try:
 			out = open(args.output, 'w', encoding='utf-8', newline='')
-
-			if args.verbose:
-				print(f'Writing data to "{args.output}"', file=sys.stderr)
-
 		except IOError as e:
 			print(f'Error writing to "{args.output}": {e.strerror}', file=sys.stderr)
 			sys.exit(-1)
 
-	encoder = make_encoder(args, out)
-	assert(encoder is not None)
-
 	try:
+		encoder = make_encoder(args, out)
+		assert(encoder is not None)
 		encoder.begin()
-		for data in rows:
-			encoder.begin_record()
-			for field in sorted(data, key=attrgetter('name')):
-				field.encode(wrap_field_encoder(encoder, field))
-			encoder.end_record()
+
+		nrecords = 0
+		for pattern in args.files:
+			path = None
+			for path in glob(pattern):
+				vprint(f'Parsing file "{path}"')
+
+				try:
+					data = None
+					with open(path, 'rb') as f:
+						data = parse_lab(f)
+
+					if data is None:
+						vprint(f'There was an error trying to parse "{path}", skipping.')
+						continue
+
+					encoder.begin_record()
+					for field in sorted(data, key=attrgetter('name')):
+						field.encode(make_field_encoder(encoder, field))
+					encoder.end_record()
+					nrecords += 1
+
+				except RuntimeError:
+					print(f'There was an error trying to open "{path}", skipping...', file=sys.stderr)
+
+			if not path:
+				print(f'No files found matching "{pattern}"', file=sys.stderr)
+
 		encoder.end()
+
+		if args.output is not None:
+			if nrecords == 0:
+				print(f'No output files were generated', file=sys.stderr)
+				sys.exit(-1)
+
+			vprint(f'Writing data to "{args.output}"')
 
 	finally:
 		if out is not sys.stdout:
