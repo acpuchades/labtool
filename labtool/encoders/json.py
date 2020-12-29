@@ -29,6 +29,4 @@ class JSONEncoder:
 		self._data = {}
 
 	def end(self):
-		import json
-
 		json.dump(self._records, self._file, sort_keys=True, indent=2)

@@ -417,7 +417,7 @@ def parse_lab(f):
 				else:
 					value_items.append((content, position))
 
-		def field_ordering(n_p): return item_ordering(n_p[1])
+		field_ordering = lambda n_p: item_ordering(n_p[1])
 		field_items = sorted(field_items, key=field_ordering)
 		value_items = sorted(value_items, key=field_ordering)
 
