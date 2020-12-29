@@ -52,8 +52,8 @@ FIELD_MAPPING = {
 
 	# Regular fields
 
-	'Ers(San)-Hemoglobina;c.massa (CHCM)': 'Sang/CHCM',
-	'Ers(San)-Hemoglobina;massa entítica (HCM)': 'Sang/HCM',
+	'Ers(San)-Hemoglobina;c.massa(CHCM)': 'Sang/CHCM',
+	'Ers(San)-Hemoglobina;massa entítica(HCM)': 'Sang/HCM',
 	'Ers(San)-Volum eritrocític;amplada de la distribució rel.': 'Sang/ADE',
 	'Gas(vSan)-Diòxid de carboni;pr.parc.': 'Sang(v)/pCO2',
 	'Gas(vSan)-Oxigen;pr.parc.': 'Sang(v)/pO2',
@@ -115,7 +115,7 @@ FIELD_MAPPING = {
 	'Srm-Cobalamines;c.subst.': 'Serum/Cobalamines',
 	'Srm-Colesterol(exclòs el d\'HDL);c.subst.': 'Serum/No-HDL',
 	'Srm-Colesterol d\'HDL;c.subst.': 'Serum/HDL',
-	'Srm-Colesterol d\'LDL;c.subst. (segons Friedewald)': 'Serum/LDL',
+	'Srm-Colesterol d\'LDL;c.subst.(segons Friedewald)': 'Serum/LDL',
 	'Srm-Colesterol d´HDL/Colesterol;quocient subst.': 'Serum/HDL:CT',
 	'Srm-Colesterol;c.subst.': 'Serum/Colesterol',
 	'Srm-Creatinini;c.subst.': 'Serum/Creatinina',
@@ -271,6 +271,9 @@ def normalize_string(s):
 	# Fix inconsistent whitespace
 	s = re.sub(r' ([;\(])', r'\1', s)
 	s = re.sub(r'([.;\)]) ', r'\1', s)
+
+	# Fix inconsistent quoting
+	s = s.replace("('", '(')
 
 	# Replace unicode characters with ASCII equivalents
 	s = s.replace('—', '-')
