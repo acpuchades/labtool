@@ -134,6 +134,7 @@ FIELD_MAPPING = {
 	'Srm-Colesterol d\'LDL;c.subst.(segons Friedewald)': 'Serum/LDL',
 	'Srm-Colesterol(exclos el d\'HDL);c.subst.': 'Serum/No-HDL',
 	'Srm-Colesterol;c.subst.': 'Serum/Colesterol',
+	'Srm-Component monoclonal;c.massa': 'Serum/Component-Monoclonal'
 	'Srm-Creatinini;c.subst.': 'Serum/Creatinina',
 	'Srm-Factors reumatoides;c.subst.arb.(OMS 64/2)': 'Serum/FR',
 	'Srm-Folats;c.subst.': 'Serum/Folats',
