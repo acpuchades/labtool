@@ -93,6 +93,7 @@ FIELD_MAPPING = {
 	'San-Eritròcits;c.nom.': 'Sang/Eritrocits',
 	'San-Eritròcits;fr.vol.(hematòcrit)': 'Sang/Hematocrit',
 	'San-Eritròcits;vol.entític(VCM)': 'Sang/VCM',
+	'San-Eritròcits;v.entític(VCM)': 'Sang/VCM',
 	'San-Hemoglobina;c.massa': 'Sang/Hemoglobina',
 	'San-Leucòcits;c.nom.': 'Sang/Leucocits',
 	'San-Limfòcits;c.nom.': 'Sang/Limfocits',
