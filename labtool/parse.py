@@ -80,8 +80,8 @@ FIELD_MAPPING = {
 	'Pla-Coagulacio induida per una superficie;temps rel.(TTPA)': 'Plasma/TTPA',
 	'Pla-Creatina-cinasa;c.cat.': 'Serum/CK',
 	'Pla-Creatinini;c.subst.': 'Serum/Creatinina',
-	'Pla-Fibrinogen;c.massa(coagul.;Clauss)': 'Plasma/Fibrinogen',
 	'Pla-Fibrinogen(coag);c.massa': 'Plasma/Fibrinogen',
+	'Pla-Fibrinogen;c.massa(coagul.;Clauss)': 'Plasma/Fibrinogen',
 	'Pla-Fibrinogen;c.massa(coagul.;derivat)': 'Plasma/Fibrinogen',
 	'Pla-Glucosa;c.subst.': 'Sang/Glucosa',
 	'Pla-Io calci;c.subst.(pH 7.4)': 'Serum/Calci(ionitzat)',
@@ -96,11 +96,11 @@ FIELD_MAPPING = {
 	'Ren-Filtrat glomerular;cabal vol.(equacio CKD-EPI)': 'Renal/Filtrat(CKD-EPI)',
 	'San-Basofils;c.nom.': 'Sang/Basofils',
 	'San-Eosinofils;c.nom.': 'Sang/Eosinofils',
-	'San-Eritrosedimentacio;long.': 'Sang/VSG',
 	'San-Eritrocits;c.nom.': 'Sang/Eritrocits',
 	'San-Eritrocits;fr.vol.(hematocrit)': 'Sang/Hematocrit',
 	'San-Eritrocits;v.entitic(VCM)': 'Sang/VCM',
 	'San-Eritrocits;vol.entitic(VCM)': 'Sang/VCM',
+	'San-Eritrosedimentacio;long.': 'Sang/VSG',
 	'San-Hemoglobina;c.massa': 'Sang/Hemoglobina',
 	'San-Leucocits;c.nom.': 'Sang/Leucocits',
 	'San-Limfocits;c.nom.': 'Sang/Limfocits',
@@ -109,20 +109,24 @@ FIELD_MAPPING = {
 	'San-Plaquetes;c.nom.': 'Sang/Plaquetes',
 	'San-Plaquetes;vol.entitic(VPM)': 'Sang/VPM',
 	'San-Reticulocits;c.nom.': 'Sang/Recitulocits',
-	'Srm-Ac.antimieloperoxi(MPO)(CLIA);c.subst.arb.': 'Serum/Anti-MPO',
-	'Srm-Ac.antiproteinasa 3(PR3)(CLIA);c.subst.arb.': 'Serum/Anti-PR3',
 	'Srm-Ac.(IgG)anti-b2-glicoprot(CLIA);c.subst.arb.': 'Serum/Anti-B2GP(IgG)',
 	'Srm-Ac.(IgG)anticardiolipina(CLIA);c.subst.arb.': 'Serum/Anti-Cardiolipina(IgG)',
 	'Srm-Ac.(IgM)anti-b2-glicoprot(CLIA);c.subst.arb.': 'Serum/Anti-B2GP(IgM)',
 	'Srm-Ac.(IgM)anticardiolipina(CLIA);c.subst.arb.': 'Serum/Anti-Cardiolipina(IgM)',
+	'Srm-Ac.antimieloperoxi(MPO)(CLIA);c.subst.arb.': 'Serum/Anti-MPO',
+	'Srm-Ac.antiproteinasa 3(PR3)(CLIA);c.subst.arb.': 'Serum/Anti-PR3',
 	'Srm-Alanina-aminotransferasa;c.cat.': 'Serum/ALT',
 	'Srm-Albumina;c.massa(CRM 470)': 'Serum/Albumina',
 	'Srm-Albumina;fr.massa': 'Serum/Albumina',
 	'Srm-Anticossos anti-DNA doble cadena;c.subst.arb.': 'Serum/Anti-dsDNA',
+	'Srm-Anticossos antimieloperoxidasa(MPO)(CLIA);': 'Serum/Anti-MPO',
 	'Srm-Anticossos antinuclears i citoplasmatics;c.arb.': 'Serum/ANAs',
+	'Srm-Anticossos(IgG)anticardiolipina(CLIA);c.subst.arb.': 'Serum/Anti-Cardiolipina(IgG)',
 	'Srm-Aspartat-aminotransferasa;c.cat.': 'Serum/AST',
+	'San-Limfocits T CD4;c.nom.': 'Sang/CD4',
 	'Srm-Bilirubina;c.subst.': 'Serum/Bilirrubina',
 	'Srm-Calci(II);c.subst.': 'Serum/Calci',
+	'Srm-Clorur;c.subst.': 'Serum/Clorur',
 	'Srm-Cobalamines;c.subst.': 'Serum/Cobalamines',
 	'Srm-Colesterol d\'HDL/Colesterol;quocient subst.': 'Serum/HDL:CT',
 	'Srm-Colesterol d\'HDL;c.subst.': 'Serum/HDL',
@@ -139,6 +143,7 @@ FIELD_MAPPING = {
 	'Srm-Io potassi;c.subst.': 'Serum/Potassi',
 	'Srm-Io sodi;c.subst.': 'Serum/Sodi',
 	'Srm-Magnesi(II);c.subst.': 'Serum/Magnesi',
+	'Srm-Prealbumina(transtiretina);c.massa': 'Serum/Prealbumina',
 	'Srm-Proteina C reactiva;c.massa': 'Serum/PCR',
 	'Srm-Proteina;c.massa': 'Serum/Proteina',
 	'Srm-Tirotropina;c.subst.arb.': 'Serum/TSH',
@@ -150,7 +155,7 @@ FIELD_MAPPING = {
 	'Srm-beta-Globulina;fr.massa': 'Serum/B-Globulina',
 	'Srm-gamma-Globulina;fr.massa': 'Serum/G-Globulina',
 	'Srm-gamma-Glutamiltransferasa;c.cat.': 'Serum/GGT',
-	'vPla-Exces de base(llocs enllaçants d`H+);c.subst.': 'Sang(v)/EB',
+	'vPla-Exces de base(llocs enllaçants d\'H+);c.subst.': 'Sang(v)/EB',
 	'vPla-Hidrogencarbonat;c.subst': 'Sang(v)/Bicarbonat',
 
 }
@@ -286,14 +291,14 @@ def normalize_string(s):
 	s = re.sub(r'([.;\)]) ', r'\1', s)
 
 	# Fix inconsistent quoting
-	s = re.sub(r'([;\(])[\'"]', r'\1', s)
-	s = re.sub(r'[\'"]([;\)])', r'\1', s)
+	s = re.sub(r'([-;\(])[\'"]', r'\1', s)
+	s = re.sub(r'[\'"]([-;\)])', r'\1', s)
 
 	# Replace unicode characters with ASCII equivalents
 	s = s.replace('—', '-')
-	s = s.replace('´', "'")
 	s = s.replace('à', 'a')
 	s = s.replace('ú', 'u')
+	s = re.sub('[`´]', "'", s)
 	s = re.sub('[èé]', 'e', s)
 	s = re.sub('[íï]', 'i', s)
 	s = re.sub('[òó]', 'o', s)
