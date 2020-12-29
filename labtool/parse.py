@@ -103,7 +103,7 @@ FIELD_MAPPING = {
 	'San-Eritrosedimentacio;long.': 'Sang/VSG',
 	'San-Hemoglobina;c.massa': 'Sang/Hemoglobina',
 	'San-Leucocits;c.nom.': 'Sang/Leucocits',
-	'San-Limfocits T CD4;c.nom.': 'Sang/Limfocits-CD4',
+	'San-Limfocits T CD4;c.nom.': 'Sang/Limfocits(CD4)',
 	'San-Limfocits;c.nom.': 'Sang/Limfocits',
 	'San-Monocits;c.nom.': 'Sang/Monocits',
 	'San-Neutrofils(segmentats);c.nom.': 'Sang/Neutrofils',
