@@ -67,21 +67,21 @@ FIELD_MAPPING = {
 	'Lks(San)-Neutròfils(segmentats);fr.nom.': 'Sang/%Neutrofils',
 	'Pac(vSan)-Plasma;pH': 'Sang(v)/pH',
 	'Pla-Alanina-aminotransferasa;c.cat.': 'Serum/ALT',
-	'Pla-Anticoagulant lúpic;c.arb.(negatiu; dubtós; positiu)': 'Plasma/Anticoagulant-Lupic',
+	'Pla-Anticoagulant lúpic;c.arb.(negatiu;dubtós;positiu)': 'Plasma/Anticoagulant-Lupic',
 	'Pla-Bilirubina;c.subst.': 'Serum/Bilirrubina',
 	'Pla-Calci(II);c.subst.': 'Serum/Calci',
 	'Pla-Clorur;c.subst': 'Serum/Clorur',
-	'Pla-Coagulació induïda per factor tissular;INR (\'temps': 'Plasma/INR',
-	'Pla-Coagulació induïda per factor tissular;temps rel. (temps': 'Plasma/TP',
-	'Pla-Coagulació induïda per una superfície;temps rel.(TTPA)': 'Plasma/TTPA',
+	'Pla-Coagulació induida per factor tissular;INR(temps': 'Plasma/INR',
+	'Pla-Coagulació induida per factor tissular;temps rel.(temps': 'Plasma/TP',
+	'Pla-Coagulació induida per una superfície;temps rel.(TTPA)': 'Plasma/TTPA',
 	'Pla-Creatina-cinasa;c.cat.': 'Serum/CK',
 	'Pla-Creatinini;c.subst.': 'Serum/Creatinina',
-	'Pla-Fibrinogen;c.massa (coagul.; Clauss)': 'Plasma/Fibrinogen',
+	'Pla-Fibrinogen;c.massa(coagul.;Clauss)': 'Plasma/Fibrinogen',
 	'Pla-Glucosa;c.subst.': 'Sang/Glucosa',
 	'Pla-Ió potassi;c.subst.': 'Serum/Potassi',
 	'Pla-Ió sodi;c.subst.': 'Serum/Sodi',
-	'Pla-Proteïna C reactiva;c.massa (CRM 470)': 'Serum/PCR',
-	'Pla-Proteïna;c.massa': 'Serum/Proteines',
+	'Pla-Proteina C reactiva;c.massa(CRM 470)': 'Serum/PCR',
+	'Pla-Proteina;c.massa': 'Serum/Proteines',
 	'Pla-Troponina T;c.massa': 'Serum/TnT',
 	'Pla-Urea;c.subst.': 'Sang/Urea',
 	'Pla-alfa-Amilasa;c.cat.': 'Serum/Amilasa',
@@ -92,16 +92,16 @@ FIELD_MAPPING = {
 	'San-Eritrosedimentació;long.': 'Sang/VSG',
 	'San-Eritròcits;c.nom.': 'Sang/Eritrocits',
 	'San-Eritròcits;fr.vol.(hematòcrit)': 'Sang/Hematocrit',
-	'San-Eritròcits;vol.entític (VCM)': 'Sang/VCM',
+	'San-Eritròcits;vol.entític(VCM)': 'Sang/VCM',
 	'San-Hemoglobina;c.massa': 'Sang/Hemoglobina',
 	'San-Leucòcits;c.nom.': 'Sang/Leucocits',
 	'San-Limfòcits;c.nom.': 'Sang/Limfocits',
 	'San-Monòcits;c.nom.': 'Sang/Monocits',
 	'San-Neutròfils(segmentats);c.nom.': 'Sang/Neutrofils',
 	'San-Plaquetes;c.nom.': 'Sang/Plaquetes',
-	'San-Plaquetes;vol.entític (VPM)': 'Sang/VPM',
-	'Srm-Ac. antimieloperoxi (MPO)(CLIA);c.subst.arb.': 'Serum/Anti-MPO',
-	'Srm-Ac. antiproteïnasa 3(PR3)(CLIA);c.subst.arb.': 'Serum/Anti-PR3',
+	'San-Plaquetes;vol.entític(VPM)': 'Sang/VPM',
+	'Srm-Ac. antimieloperoxi(MPO)(CLIA);c.subst.arb.': 'Serum/Anti-MPO',
+	'Srm-Ac. antiproteinasa 3(PR3)(CLIA);c.subst.arb.': 'Serum/Anti-PR3',
 	'Srm-Ac.(IgG) anti-b2-glicoprot(CLIA);c.subst.arb.': 'Serum/Anti-B2GP(IgG)',
 	'Srm-Ac.(IgG) anticardiolipina(CLIA);c.subst.arb.': 'Serum/Anti-Cardiolipina(IgG)',
 	'Srm-Ac.(IgM) anti-b2-glicoprot(CLIA);c.subst.arb.': 'Serum/Anti-B2GP(IgM)',
@@ -113,7 +113,7 @@ FIELD_MAPPING = {
 	'Srm-Aspartat-aminotransferasa;c.cat.': 'Serum/AST',
 	'Srm-Calci(II);c.subst.': 'Serum/Calci',
 	'Srm-Cobalamines;c.subst.': 'Serum/Cobalamines',
-	'Srm-Colesterol (exclòs el d\'HDL);c.subst.': 'Serum/No-HDL',
+	'Srm-Colesterol(exclòs el d\'HDL);c.subst.': 'Serum/No-HDL',
 	'Srm-Colesterol d\'HDL;c.subst.': 'Serum/HDL',
 	'Srm-Colesterol d\'LDL;c.subst. (segons Friedewald)': 'Serum/LDL',
 	'Srm-Colesterol d´HDL/Colesterol;quocient subst.': 'Serum/HDL:CT',
@@ -122,14 +122,14 @@ FIELD_MAPPING = {
 	'Srm-Factors reumatoides;c.subst.arb.(OMS 64/2)': 'Serum/FR',
 	'Srm-Folats;c.subst.': 'Serum/Folats',
 	'Srm-Fosfatasa alcalina;c.cat.': 'Serum/FA',
-	'Srm-Glucosa;c.subst. (mitjana estimada)': 'Serum/Glucosa',
+	'Srm-Glucosa;c.subst.(mitjana estimada)': 'Serum/Glucosa',
 	'Srm-Glucosa;c.subst.': 'Serum/Glucosa',
 	'Srm-Ió potassi;c.subst.': 'Serum/Potassi',
 	'Srm-Ió sodi;c.subst.': 'Serum/Sodi',
-	'Srm-Proteïna C reactiva;c.massa': 'Serum/PCR',
-	'Srm-Proteïna;c.massa': 'Serum/Proteina',
+	'Srm-Proteina C reactiva;c.massa': 'Serum/PCR',
+	'Srm-Proteina;c.massa': 'Serum/Proteina',
 	'Srm-Tirotropina;c.subst.arb.': 'Serum/TSH',
-	'Srm-Tiroxina(no unida a proteïna);c.subst.': 'Serum/T4L',
+	'Srm-Tiroxina(no unida a proteina);c.subst.': 'Serum/T4L',
 	'Srm-Triglicèrid;c.subst.': 'Serum/Triglicerid',
 	'Srm-Urea;c.subst.': 'Serum/Urea',
 	'Srm-alfa 1-Globulina;fr.massa': 'Serum/A1-Globulina',
@@ -264,9 +264,18 @@ class FieldText:
 
 
 def normalize_string(s):
+
+	# Coalesce whitespace
 	s = re.sub(r'[ \t]+', ' ', s)
-	s = re.sub(r'; ', ';', s)
+
+	# Fix inconsistent whitespace
+	s = re.sub(r' ([;\(])', r'\1', s)
+	s = re.sub(r'([.;\)]) ', r'\1', s)
+
+	# Replace unicode characters with ASCII equivalents
 	s = s.replace('—', '-')
+	s = s.replace('ï', 'i')
+
 	return s.strip()
 
 
