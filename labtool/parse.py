@@ -291,8 +291,8 @@ def normalize_string(s):
 	s = re.sub(r'([.;\)]) ', r'\1', s)
 
 	# Fix inconsistent quoting
-	s = re.sub(r'([-;\(])[\'"]', r'\1', s)
-	s = re.sub(r'[\'"]([-;\)])', r'\1', s)
+	s = re.sub(r'([-;\(\)])[\'"]', r'\1', s)
+	s = re.sub(r'[\'"]([-;\(\)])', r'\1', s)
 
 	# Replace unicode characters with ASCII equivalents
 	s = s.replace('—', '-')
