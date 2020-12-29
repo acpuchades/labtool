@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
 	name="labtool",
-	version="0.0.22",
+	version="0.0.23",
 	author="Alejandro Caravaca Puchades",
 	author_email="acaravacapuchades+dev@gmail.com",
 	description="A tool to analyze lab report files",
