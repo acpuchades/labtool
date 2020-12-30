@@ -92,7 +92,7 @@ FIELD_MAPPING = {
 	'Pla-Proteina;c.massa': 'Serum/Proteines',
 	'Pla-Troponina T;c.massa': 'Serum/TnT',
 	'Pla-Urea;c.subst.': 'Sang/Urea',
-	'Pla-alfa-Amilasa;c.cat.': 'Serum/Amilasa',
+	'Pla-alfa-Amilasa;c.cat.': 'Serum/Alfa-Amilasa',
 	'Ren-Filtrat glomerular;cabal vol.(equacio CKD-EPI)': 'Renal/Filtrat(CKD-EPI)',
 	'San-Basofils;c.nom.': 'Sang/Basofils',
 	'San-Eosinofils;c.nom.': 'Sang/Eosinofils',
