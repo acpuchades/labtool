@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import math, operator, re, sys
+import math, operator, os, re, sys
 
 from argparse         import ArgumentParser
 from dataclasses      import dataclass
@@ -63,7 +63,7 @@ def main():
 					data = None
 					with open(path, 'rb') as f:
 						data = parse_lab(f)
-						data.append(make_field('Metadata/Source', path))
+						data.append(make_field('Metadata/Source', os.path.abspath(path)))
 
 					if data is None:
 						vprint(f'There was an error trying to parse "{path}", skipping.')
