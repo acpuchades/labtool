@@ -63,8 +63,7 @@ def main():
 					data = None
 					with open(path, 'rb') as f:
 						data = parse_lab(f)
-						METADATA_SOURCE = 'Metadata/Source'
-						data[METADATA_SOURCE] = make_field(METADATA_SOURCE, path)
+						data.append(make_field('Metadata/Source', path))
 
 					if data is None:
 						vprint(f'There was an error trying to parse "{path}", skipping.')

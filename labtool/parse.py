@@ -533,4 +533,4 @@ def parse_lab(f):
 
 			data[field.name] = field
 
-	return data.values()
+	return list(data.values())
