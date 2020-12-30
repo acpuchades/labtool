@@ -285,6 +285,12 @@ class FieldText:
 		pass
 
 
+def make_field(name, value):
+	field = Field(name)
+	field.add_data(FieldValue(value))
+	return field
+
+
 def normalize_string(s):
 
 	# Coalesce whitespace

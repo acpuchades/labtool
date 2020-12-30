@@ -8,7 +8,7 @@ from glob             import glob
 from numbers          import Number
 from operator         import attrgetter
 
-from labtool.parse    import parse_lab
+from labtool.parse    import make_field, parse_lab
 from labtool.encoders import encoders_available, make_encoder
 
 
@@ -63,6 +63,7 @@ def main():
 					data = None
 					with open(path, 'rb') as f:
 						data = parse_lab(f)
+						data.append(make_field('Metadata/Source', path))
 
 					if data is None:
 						vprint(f'There was an error trying to parse "{path}", skipping.')
